@@ -1,0 +1,167 @@
+{% extends 'libros/base.html' %}
+{% load static %}
+{% block 'head' %}
+    <link href="{% static 'libros/css/carousel.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <link type="text/css" rel="stylesheet" href="{% static 'libros/css/jquery-te-1.4.0.css' %}" >
+{% endblock %}
+{% block 'body' %}
+<hr>
+<form id="form" name="form" action="{% url 'categories' %}{{ category.slug}}/libro/" method="post">
+    {% csrf_token %}
+    <input id="id_book" name="id_book" type="hidden" value="{{ book.id }}">
+    <input id="id_chapter" name="id_chapter" type="hidden" value="{{ id_chapter }}">
+
+    <input id="capitulo" name="capitulo" type="hidden" value="{{ capitulo }}">
+
+    <div class="container">
+            <div class="form-row">
+                {% if book.id %}
+                    <div class="col-md-7">
+                        <a href="{% url 'categories' %}{{ book.categoria.slug}}/leer-libro/{{book.id}}/1/"><button type="button" class="btn btn-info">Ver libro</button></a>
+                    </div>
+                {% endif %}
+                <br>
+                <br>
+            </div>
+            <div class="form-row">
+                <div class="col-md-7">
+                    <img id="img-book" class="img-rounded" src="" width="100%" height="500px" draggable="false">
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        {% if capitulo == '' %}
+                            <label for="txtTitulo">Titulo del libro:</label>
+                            <input id="txtTitulo" name="txtTitulo" class="form-control" type="text" value="{{ book.titulo }}">
+                            <input id="id_imagen" name="id_imagen" type="hidden" value="{{ book.imagen.id }}">
+                        {% else %}
+                            <label for="txtTitulo">Titulo del Capitulo {{ capitulo }}:</label>
+                            <input id="txtTitulo" name="txtTitulo" class="form-control" type="text" value="{{ capitulo_actual.titulo}}">
+                            <input id="id_imagen" name="id_imagen" type="hidden" value="{{ capitulo_actual.imagen.id }}">
+                        {% endif %}
+
+                    </div>
+                    <div class="form-group">
+                        {% if capitulo == '' %}
+                            <div class="checkbox">
+                              <label for="chkPublico"><input id="chkPublico" name="chkPublico" type="checkbox" {% if book.es_publico %} checked {%endif%}>Público</label>
+                            </div>
+                            <label for="txtTexto">Introducción:</label>
+                            <textarea class="form-control" id="txtTexto" name="txtTexto" style="width:100%; height:380px">{{ book.introduccion }}</textarea>
+                        {% else %}
+                            <label for="txtTexto">Contenido del Capitulo {{ capitulo }}:</label>
+                            <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                                <textarea class="form-control" id="txtTexto" name="txtTexto" style="width:100%; height:400px">{{ capitulo_actual.texto }}</textarea>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="form-row">
+            <div class="col-md-3">
+                {% if capitulo != '' %}
+                    {% if capitulo|default:0|add:-1 == 0 %}
+                        <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/"><button id="btn_cap_ant" type="button" class="btn btn-primary">Libro</button></a>
+                    {% else %}
+                        <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{ capitulo|default:0|add:-1 }}/"><button id="btn_cap_ant" type="button" class="btn btn-primary">Capítulo {{ capitulo|default:0|add:-1 }}</button></a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <center>
+                    <button id="btn_guardar" type="submit" class="btn btn-success">Guardar</button>
+                    <!--<button id="btn_eliminar" type="button" class="btn btn-danger">Eliminar</button>-->
+                </center>
+            </div>
+            <div class="col-md-3">
+                {% if book and book.id and book.id != '' %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{ capitulo|default:0|add:1 }}/"><button id="btn_cap_sig" type="button" class="btn btn-primary" style="float: right">Capítulo {{ capitulo|default:0|add:1 }}</button></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="container">
+  <div class='row'>
+    <div class='col-md-12'>
+      <div class="carousel slide media-carousel" id="media">
+          <div class="carousel-inner">
+            {% for list in images_list %}
+                {% if list.0.id == first %}
+                    <div class="item active">
+                 {% else %}
+                    <div class="item">
+                 {% endif %}
+                  <div class="row">
+                      {% for image in list %}
+                        <div class="col-md-3">
+                            <a class="thumbnail" href="#"><img id="{{ image.id }}" alt="" src="{{ image.imagen.url }}" onclick="clickImagen({{ image.id }})"></a>
+                        </div>
+                      {% endfor %}
+                  </div>
+               </div>
+            {% endfor %}
+        </div>
+        <a data-slide="prev" href="#media" class="left carousel-control">‹</a>
+        <a data-slide="next" href="#media" class="right carousel-control">›</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script type="text/javascript" src="{% static 'libros/js/jquery-1.7.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'libros/js/jquery-te-1.4.0.min.js' %}"></script>
+
+<script>
+/*$('textarea').on('keyup', function(){
+  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
+});*/
+</script>
+<script>
+    $(".editor").jqte({
+        link: false,
+        unlink: false,
+        u: false,
+        sub: false,
+        sup: false,
+        strike: false,
+        source: false,
+        ol: false,
+        ul: false,
+        format: false
+    });
+
+    $('.jqte_editor').css({ height: '345px' });
+</script>
+<script>
+$(document).ready(function() {
+  $('#media').carousel({
+    pause: true,
+    interval: false,
+  });
+
+  var id_imagen = $('#id_imagen').val();
+
+  if(id_imagen == ''){
+    $('img')[1].click();
+  }else{
+    $('#'+id_imagen).click();
+  }
+
+  //$('#txtTexto').wysihtml5();
+});
+
+function clickImagen(id){
+    $('#id_imagen').val(id);
+    imagen = $('#'+id);
+    $('#img-book').attr('src',imagen.attr('src'));
+}
+</script>
+
+
+{% endblock %}

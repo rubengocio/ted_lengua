@@ -1,0 +1,44 @@
+{% extends 'libros/base.html'%}
+{% load static%}
+{% block 'head' %}
+    <link href="{% static 'libros/css/carousel.css' %}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+{% block 'slider' %}
+<!-- banner -->
+	<div class="banner1">
+		<div class="w3_agileits_service_banner_info">
+			<h2>{{ category.nombre }}</h2>
+		</div>
+	</div>
+<!-- //banner -->
+{% endblock %}
+{% block 'body' %}
+<br>
+<div class="container">
+    <div class="col-md-4">
+        <a href="{% url 'categories' %}{{ category.slug}}/libro/"><button type="button" class="btn btn-info">Crear un libro</button></a>
+        <a href="{% url 'categories' %}"><button type="button" class="btn btn-info" style="float: right">Volver a tipos de textos</button></a>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      {% for book in books %}
+        <div class="col-md-4">
+            <div class="thumbnail" style="width: 360px; height: 440px">
+              <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/1">
+                <img src="{{ book.imagen.imagen.url }}" alt="Lights" style="width: 350px; height: 270px">
+                <div class="caption" style="width: 350px; height: 100px">
+                    <p><h4>{{book.titulo}}</h4></p>
+                    <br>
+                    <p>{{book.introduccion|truncatechars:120}}</p>
+                    <br>
+                    <p class="align-text-bottom" align="right">Autor: {{book.usuario}}</p>
+                </div>
+              </a>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+
+</div>
+{% endblock%}

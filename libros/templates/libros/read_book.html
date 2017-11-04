@@ -1,0 +1,232 @@
+{% extends 'libros/base.html'%}
+{% load static%}
+{% block 'slider' %}
+<!-- banner -->
+	<div class="banner1">
+		<div class="w3_agileits_service_banner_info">
+			<h2>{{ book.titulo }}</h2>
+		</div>
+	</div>
+<!-- //banner -->
+{% endblock %}
+{% block 'body' %}
+<br>
+<div class="container">
+    <input id="user" type="hidden" value="{{ request.user.first_name }} {{ request.user.first_name }}">
+    <input id="email" type="hidden" value="{{ request.user.email }}">
+    <input id="id_book" type="hidden" value="{{ book.id }}">
+    <div class="row">
+        <div class="col-md-4">
+            {% if request.user.id == book.usuario.id %}
+                <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/"><button type="button" class="btn btn-info {% if request.user.id != book.usuario.id %}disabled {% endif %}">Editar libro</button></a>
+            {% endif %}
+            <a href="{% url 'categories' %}{{ category.slug}}/"><button type="button" class="btn btn-info" style="float: right">Volver a {{ category.nombre }}</button></a>
+        </div>
+        <div class="col-md-8">
+            {% if actual == 1 and siguiente != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-success" style="float: right">Nudo</button></a>
+            {% endif %}
+
+            {% if actual == 2 and siguiente != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-success" style="float: right">Desenlace</button></a>
+            {% endif %}
+
+            {% if actual == 2 and anterior != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-success">Introducción</button></a>
+            {% endif %}
+
+            {% if actual == 3 and anterior != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-success">Nudo</button></a>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active">
+                    {{ book.titulo }}
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <img src="{{ book.imagen.imagen.url}}" style="height: 25%; width: 100%; object-fit: list-group">
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    {{ book.introduccion }}
+                </a>
+                {% for chap in chapters %}
+                    {% if chap.orden == chapter.orden %}
+                        <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{chap.orden}}/" class="list-group-item list-group-item-action disabled">{{ chap.titulo }}</a>
+                    {% else %}
+                        <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{chap.orden}}/" class="list-group-item list-group-item-action">{{ chap.titulo }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if request.user.is_staff  %}
+                <div id="comments" class="list-group">
+                    <div class="list-group-item list-group-item-action active">Calificación</div>
+                    <div class="list-group-item list-group-item-action">
+                        <select class="form-control" id="cboCalificacion">
+                            <option {% if book.calificacion == None %} selected {% endif %}></option>
+                            <option {% if book.calificacion == 1 %} selected {% endif %}>1</option>
+                            <option {% if book.calificacion == 2 %} selected {% endif %}>2</option>
+                            <option {% if book.calificacion == 3 %} selected {% endif %}>3</option>
+                            <option {% if book.calificacion == 4 %} selected {% endif %}>4</option>
+                            <option {% if book.calificacion == 5 %} selected {% endif %}>5</option>
+                            <option {% if book.calificacion == 6 %} selected {% endif %}>6</option>
+                            <option {% if book.calificacion == 7 %} selected {% endif %}>7</option>
+                            <option {% if book.calificacion == 8 %} selected {% endif %}>8</option>
+                            <option {% if book.calificacion == 9 %} selected {% endif %}>9</option>
+                            <option {% if book.calificacion == 10 %} selected {% endif %}>10</option>
+                        </select>
+                    </div>
+                    <div class="list-group-item list-group-item-action active">Devolución</div>
+                    <div class="list-group-item list-group-item-action">
+                        <textarea id="txtComentario" class="form-control" rows="5" style="resize:none" autofocus></textarea>
+                        <br>
+                        <button class="btn btn-primary" style="float: right" onclick="addComment()">Agregar</button>
+                        <br>
+                        <br>
+                    </div>
+                    {% for comment in comments %}
+                        <div class="list-group-item list-group-item-action">
+                            <blockquote class="blockquote small">
+                                {{comment.date_created|date:"d/M/Y"}}
+                            </blockquote>
+                            <br>
+                            {{comment.comentario}}
+                            <br>
+                            <blockquote class="blockquote-reverse small">
+                                {% if comment.usuario.first_name == '' and comment.usuario.first_name == '' %}{{comment.usuario.email}}{% else %}{{ comment.usuario.first_name }} {{ comment.usuario.first_name }}{% endif %}
+                            </blockquote>
+                            <br>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {% if request.user.id == book.usuario.id  %}
+                    <div class="list-group">
+                        <div class="list-group-item list-group-item-action active">Calificación</div>
+                        <div class="list-group-item list-group-item-action">
+                            <select class="form-control" disabled>
+                                <option>{{ book.calificacion }}</option>
+                            </select>
+                        </div>
+                        <div class="list-group-item list-group-item-action active">Comentarios</div>
+                        {% for comment in comments %}
+                            <div class="list-group-item list-group-item-action">
+                                <blockquote class="blockquote small">
+                                    {{comment.date_created|date:"d/m/Y"}}
+                                </blockquote>
+                                {{comment.comentario}}
+                                <br>
+                                <blockquote class="blockquote-reverse small">
+                                    {% if comment.usuario.first_name == '' and comment.usuario.first_name == '' %}{{comment.usuario.email}}{% else %}{{ comment.usuario.first_name }} {{ comment.usuario.first_name }}{% endif %}
+                                </blockquote>
+
+                                <br>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
+
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="content">
+                <div id="page-selection">
+                    <div class="thumbnail" style="width: 100%">
+                        <img src="{{ chapter.imagen.imagen.url }}" alt="Lights" style="width:100%; height: 50%">
+                        <div class="caption">
+                            <center>
+                                <br>
+                                <p><h2>{{chapter.titulo}}</h2></p>
+                            </center>
+                            <br>
+                            <!--<p align="justify" style="margin:35px">{{chapter.texto}}</p>-->
+                            <!--<div id="div_tex" align="justify" style="margin:35px">
+                                {{chapter.texto}}
+                            </div>-->
+                            <div id="div_tex" align="justify" style="margin:35px; width:90%; height: auto; white-space:pre-wrap; overflow:auto;"><!--<font size="6">{{chapter.texto|slice:"0:1"}}</font>-->{{chapter.texto}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+            {% if actual == 1 and siguiente != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-success" style="float: right">Nudo</button></a>
+            {% endif %}
+
+            {% if actual == 2 and siguiente != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-success" style="float: right">Desenlace</button></a>
+            {% endif %}
+
+            {% if actual == 2 and anterior != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-success">Introducción</button></a>
+            {% endif %}
+
+            {% if actual == 3 and anterior != None %}
+                <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-success">Nudo</button></a>
+            {% endif %}
+        </div>
+
+
+        </div>
+
+    </div>
+    <br>
+</div>
+{% endblock%}
+{% block 'script' %}
+<script type="text/javascript">
+    var addComment = function(){
+        var txtComentario = $('#txtComentario').val();
+        var comentario = txtComentario;
+        var user = $('#user').val();
+        var email = $('#email').val();
+
+        if(user.trim() == ""){
+            user = email;
+        }
+
+        if(txtComentario.trim() != ""){
+            txtComentario = txtComentario + '<br><blockquote class="blockquote-reverse small">' + user + '</label><br>';
+            var id_book =  $('#id_book').val();
+            console.log(id_book);
+            $.ajax({
+                type: "POST",
+                url: '/comentar/',
+                data: {
+                    'id_book': id_book,
+                    'comentario': comentario
+                },
+                success: function(response){
+                    console.log(response);
+                    $('#comments').append('<div class="list-group-item list-group-item-action">'+ txtComentario +'</div>');
+                    $('#txtComentario').val('');
+                    $("#txtComentario").focus();
+                }
+            });
+        }
+    }
+</script>
+<script type="text/javascript">
+    $('#cboCalificacion').on('change', function() {
+        console.log('paso');
+        var id_book =  $('#id_book').val();
+        $.ajax({
+            type: "POST",
+            url: '/calificar/',
+            data: {
+                'id_book': id_book,
+                'calificacion': this.value
+            },
+            success: function(response){
+                console.log(response);
+            }
+        });
+    });
+</script>
+{% endblock%}
+

@@ -1,0 +1,125 @@
+{% extends 'libros/base.html'%}
+{% load static %}
+{% block 'slider'%}
+<!-- banner -->
+	<div class="banner-silder" style="height:700px">
+		<div id="JiSlider" class="jislider">
+			<ul>
+				<li>
+					<div class="w3layouts-banner-top">
+						<div class="container">
+							<div class="agileits-banner-info">
+								 <span>Lengua</span>
+								<h3>Liceo Militar General Paz</h3>
+								 <p>Educación Secundaria</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="w3layouts-banner-top w3layouts-banner-top1">
+						<div class="container">
+							<div class="agileits-banner-info">
+							 <span>Educación</span>
+								<h3>Texto narrativo ficcional</h3>
+								 <p>Promover la creatividad y la lectura a través de
+									 la creación de textos narrativos</p>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="w3layouts-banner-top w3layouts-banner-top2">
+						<div class="container">
+							<div class="agileits-banner-info">
+							 <span>Creado por: </span>
+								<br>
+								<br>
+								<br>
+								 <p>Tomatis, Dario - dftomatis@gmail.com</p>
+								 <p>Gocio, Ruben - rubengocio@gmail.com</p>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+      </div>
+<!-- //banner -->
+{% endblock %}
+{% block 'banner-bottom' %}
+<!-- banner-bottom -->
+	<div class="banner-bottom">
+		<div class="container">
+			<h3> Libros<span class="fixed_w3"> destacados</span></h3>
+			<div class="agileits_banner_bottom_grids">
+				{% for libro in libros_destacados %}
+					<div class="col-md-3 agileits_banner_bottom_grid">
+						<a href="{% url 'categories' %}{{ libro.categoria.slug}}/leer-libro/{{libro.id}}/1">
+						<div class="hovereffect w3ls_banner_bottom_grid" style="width:255px; height:167px">
+							<img src="{{ libro.imagen.imagen.url}}" alt=" " width="255px" height="167px"  />
+							<div class="overlay">
+							   <h4>{{ libro.titulo }}</h4>
+							   <p>{{ libro.categoria.nombre }}</p>
+							</div>
+						</div>
+						</a>
+					</div>
+				{% endfor %}
+				<div class="clearfix"> </div>
+			</div>
+				<div class="team-w3ls-row">
+				   <div class="agileits_banner_bottom_grids">
+				<div class="clearfix"> </div>
+			</div>
+			</div>
+
+		</div>
+	</div>
+<!-- //banner-bottom -->
+{% endblock %}
+{% block 'services'%}
+<!-- services -->
+<div class="services" id="services">
+    <div class="container">
+    <h3 class="w3l_header w3_agileits_header two">Our <span>Benefits</span></h3>
+        <div class="agile_inner_w3ls-grids two">
+            <div class="col-md-3 service-box">
+                <figure class="icon">
+                    <span>1</span>
+                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                </figure>
+                <h5>Experienced Faculty</h5>
+                <p>Lorem ipsum dolor sit amet.doloremque laudantium elerisque.</p>
+            </div>
+            <div class="col-md-3 service-box">
+
+                <figure class="icon">
+                 <span>2</span>
+                <i class="fa fa-laptop" aria-hidden="true"></i>
+                </figure>
+                <h5>Online Courses</h5>
+                <p>Lorem ipsum dolor sit amet.doloremque laudantium elerisque.</p>
+            </div>
+            <div class="col-md-3 service-box">
+                <figure class="icon">
+                 <span>3</span>
+                    <i class="fa fa-book" aria-hidden="true"></i>
+                </figure>
+                <h5>Central Library</h5>
+            <p>Lorem ipsum dolor sit amet.doloremque laudantium elerisque.</p>
+            </div>
+            <div class="col-md-3 service-box">
+                <figure class="icon">
+                 <span>4</span>
+                    <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
+                </figure>
+                <h5>Creative Thinking</h5>
+                <p>Lorem ipsum dolor sit amet.doloremque laudantium elerisque.</p>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>
+<!-- //services -->
+{% endblock %}

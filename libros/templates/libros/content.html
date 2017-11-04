@@ -1,0 +1,57 @@
+{% extends 'libros/base.html' %}
+{% load static %}
+{% block 'head' %}
+	<script src="{% static 'libros/tinymce/js/tinymce/tinymce.min.js' %}"></script>
+	<script>
+		tinymce.init({
+			selector:'textarea',
+			height: 800,
+			plugins: [
+				"advlist autolink lists link image charmap print preview anchor",
+				"searchreplace visualblocks code fullscreen",
+				"insertdatetime media table contextmenu paste imagetools"
+			],
+			menubar: false,
+			toolbar: ' formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image '
+		});
+	</script>
+{% endblock %}
+{% block 'slider' %}
+<!-- banner -->
+	<div class="banner1">
+		<div class="w3_agileits_service_banner_info">
+			<h2>Contenido</h2>
+		</div>
+	</div>
+<!-- //banner -->
+{% endblock %}
+{% block 'body' %}
+<div class="contact">
+  <div class="container">
+		<form method="post">
+			{% csrf_token %}
+			{% if request.user.is_staff %}
+				<button type="submit" class="btn btn-success">Guardar</button>
+				<textarea id="txtArea" name="txtArea">{{content.texto}}</textarea>
+				<input id="conten_id" type="hidden" name="content_id" value="1">
+			{% else %}
+				<div id="container" style="display: none;">
+					<textarea id="txtArea" name="txtArea">{{content.texto}}</textarea>
+				</div>
+				<div id="texto" style="margin:35px; width:90%; height: auto; white-space:pre-wrap; overflow:auto;"></div>
+			{% endif %}
+		</form>
+  </div>
+</div>
+{% endblock %}
+{% block 'script' %}
+	<script type="text/javascript">
+		$(document).ready(function () {
+			texto = $('#texto')
+			if(texto != null){
+				console.log('paso');
+				$('#texto').html($('textarea').val());
+			}
+		});
+	</script>
+{% endblock %}

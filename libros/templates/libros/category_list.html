@@ -1,0 +1,37 @@
+{% extends 'libros/base.html' %}
+{% load static %}
+{% block 'head' %}
+	<link rel="stylesheet" type="text/css" href="{% static 'libros/css/imagehover.min.css' %}">
+{% endblock %}
+{% block 'slider' %}
+<!-- banner -->
+	<div class="banner1">
+		<div class="w3_agileits_service_banner_info">
+			<h2>Ejercitación</h2>
+		</div>
+	</div>
+<!-- //banner -->
+{% endblock %}
+{% block 'body' %}
+<div class="contact">
+  	<div class="container">
+	  		<center><h1><b>Tipos de textos narrativos</b></h1></center>
+	  		<div class="inner_w3l_agile_grids-gal">
+				{% for category in category_list %}
+				<div class="col-md-4 gallery-grid gallery1" style="width:380px; height:380px">
+					<figure class="imghvr-fold-up">
+
+						<img src="{{ category.imagen_categoria.url }}" class="img-responsive">
+						  <figcaption>
+							  <h3>{{ category.nombre }}</h3>
+							  <p>{{ category.descripcion}}</p>
+						  </figcaption>
+						  <a href="{{ category.slug }}"></a>
+					</figure>
+				</div>
+				{% endfor %}
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+</div>
+{% endblock %}

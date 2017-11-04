@@ -1,0 +1,25 @@
+{% load static %}
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Login Form</title>
+
+  <link rel='stylesheet prefetch' href="{% static 'libros/css/login_bootstrap.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'libros/css/style_login.css' %}">
+</head>
+<body>
+    <div class="wrapper">
+    <form method="post" class="form-signin" action="{% url 'register' %}">
+      {% csrf_token %}
+      <h2 class="form-signin-heading">Registro</h2>
+        <input type="text" class="form-control" name="first_name" placeholder="Nombre" required="" autofocus="" />
+        <input type="text" class="form-control" name="last_name" placeholder="Apellido" required="" autofocus="" />
+        <input type="text" class="form-control" name="username" placeholder="Email" required="" autofocus="" />
+        <input type="password" class="form-control" name="password" placeholder="Contraseña" required=""/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="login">Registrarse</button>
+        <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+  </div>
+</body>
+</html>
