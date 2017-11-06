@@ -16,6 +16,14 @@ class Categoria(models.Model):
     def __str__(self):
         return "%s" % (self.nombre)
 
+    @property
+    def get_nombre_singular(self):
+        if self.nombre[-1:] == 's':
+            return self.nombre[0:len(self.nombre)-1]
+        else:
+            return self.nombre
+
+
 class Imagen(models.Model):
     titulo = models.CharField(max_length=256)
     descripcion = models.TextField(blank=True, null=True)

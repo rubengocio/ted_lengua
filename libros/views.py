@@ -24,9 +24,11 @@ def new_book(request, slug, id_book=None, id_chapter=None):
     template_name = 'libros/book_form.html'
     category = Categoria.objects.get(slug=slug)
     images_list = []
-    #images_list = Imagen.objects.filter(categoria=category)
     image = Imagen()
     images_list = image.get_images_by_paginate(category)
+    anterior = None
+    actual = 0
+    siguiente = None
 
     if images_list:
         first = images_list[0][0].id
@@ -34,6 +36,9 @@ def new_book(request, slug, id_book=None, id_chapter=None):
     capitulo = ''
     if id_chapter:
         capitulo = id_chapter
+        anterior = int(capitulo) - 1
+        actual = int(capitulo)
+        siguiente = int(capitulo) + 1
 
     book = Libro()
     capitulo_actual = Capitulo()
@@ -74,6 +79,9 @@ def new_book(request, slug, id_book=None, id_chapter=None):
             book.imagen = imagen
             book.es_publico = es_publico
             book.save()
+            anterior = None
+            actual = 0
+            siguiente = 1
         else:
             book = Libro.objects.get(id=id_book)
             capitulo_actual.titulo = titulo
@@ -83,6 +91,9 @@ def new_book(request, slug, id_book=None, id_chapter=None):
             capitulo_actual.orden = id_chapter
             capitulo_actual.save()
             capitulo = id_chapter
+            anterior = int(capitulo) - 1
+            actual = int(capitulo)
+            siguiente = int(capitulo) + 1
 
 
     context = {
@@ -93,7 +104,10 @@ def new_book(request, slug, id_book=None, id_chapter=None):
         'capitulo_actual': capitulo_actual,
         'id_chapter': id_chapter,
         'first': first,
-        'menu': 'eje'
+        'menu': 'eje',
+        'anterior': anterior,
+        'actual': actual,
+        'siguiente': siguiente
     }
 
     return render(request, template_name, context)
@@ -212,7 +226,6 @@ def editor(request):
     return render(request, template_name)
 
 
-
 def student_books(request, student_id):
     student = User.objects.get(pk=student_id)
     books = Libro.objects.filter(usuario=student)
@@ -287,3 +300,18 @@ def content(request):
 
     return render(request, 'libros/content.html', context)
 
+
+def autoevaluate(request):
+    context = {
+        'menu': 'eva'
+    }
+
+    return render(request, 'libros/autoevaluate.html', context)
+
+
+def help(request):
+    context = {
+        'menu': 'ayu'
+    }
+
+    return render(request, 'libros/help.html', context)

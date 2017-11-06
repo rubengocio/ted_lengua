@@ -153,7 +153,7 @@
                 </div>
             </div>
 
-            <div class="col-md-8">
+            <!--<div class="col-md-8">-->
             {% if actual == 1 and siguiente != None %}
                 <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-success" style="float: right">Nudo</button></a>
             {% endif %}
@@ -169,7 +169,7 @@
             {% if actual == 3 and anterior != None %}
                 <a href="{% url 'categories' %}{{ category.slug}}/leer-libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-success">Nudo</button></a>
             {% endif %}
-        </div>
+            <!--</div>-->
 
 
         </div>

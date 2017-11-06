@@ -16,7 +16,7 @@
 <br>
 <div class="container">
     <div class="col-md-4">
-        <a href="{% url 'categories' %}{{ category.slug}}/libro/"><button type="button" class="btn btn-info">Crear un libro</button></a>
+        <a href="{% url 'categories' %}{{ category.slug}}/libro/"><button type="button" class="btn btn-info">Crear {{ category.get_nombre_singular}}</button></a>
         <a href="{% url 'categories' %}"><button type="button" class="btn btn-info" style="float: right">Volver a tipos de textos</button></a>
     </div>
     <br>

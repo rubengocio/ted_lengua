@@ -17,7 +17,7 @@
             <div class="form-row">
                 {% if book.id %}
                     <div class="col-md-7">
-                        <a href="{% url 'categories' %}{{ book.categoria.slug}}/leer-libro/{{book.id}}/1/"><button type="button" class="btn btn-info">Ver libro</button></a>
+                        <a href="{% url 'categories' %}{{ book.categoria.slug}}/leer-libro/{{book.id}}/1/"><button type="button" class="btn btn-info">Ver {{ category.get_nombre_singular }}</button></a>
                     </div>
                 {% endif %}
                 <br>
@@ -29,26 +29,38 @@
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
-                        {% if capitulo == '' %}
-                            <label for="txtTitulo">Titulo del libro:</label>
-                            <input id="txtTitulo" name="txtTitulo" class="form-control" type="text" value="{{ book.titulo }}">
+                        {% if actual == 0 %}
+                            <label for="txtTitulo">{{category.get_nombre_singular}}:</label>
+                            <input id="txtTitulo" name="txtTitulo" class="form-control" type="text" value="{{ book.titulo }}" placeholder="Título">
                             <input id="id_imagen" name="id_imagen" type="hidden" value="{{ book.imagen.id }}">
                         {% else %}
-                            <label for="txtTitulo">Titulo del Capitulo {{ capitulo }}:</label>
+                            {% if actual == 1 %}
+                                <label for="txtTitulo">Titulo de Introducción:</label>
+                            {% elif actual == 2 %}
+                                <label for="txtTitulo">Titulo de Nudo:</label>
+                            {% else %}
+                                <label for="txtTitulo">Titulo de Desenlace:</label>
+                            {% endif %}
                             <input id="txtTitulo" name="txtTitulo" class="form-control" type="text" value="{{ capitulo_actual.titulo}}">
                             <input id="id_imagen" name="id_imagen" type="hidden" value="{{ capitulo_actual.imagen.id }}">
                         {% endif %}
 
                     </div>
                     <div class="form-group">
-                        {% if capitulo == '' %}
+                        {% if actual == 0 %}
                             <div class="checkbox">
                               <label for="chkPublico"><input id="chkPublico" name="chkPublico" type="checkbox" {% if book.es_publico %} checked {%endif%}>Público</label>
                             </div>
-                            <label for="txtTexto">Introducción:</label>
+                            <label for="txtTexto">Resumen:</label>
                             <textarea class="form-control" id="txtTexto" name="txtTexto" style="width:100%; height:380px">{{ book.introduccion }}</textarea>
                         {% else %}
-                            <label for="txtTexto">Contenido del Capitulo {{ capitulo }}:</label>
+                            {% if actual == 1 %}
+                                <label for="txtTitulo">Introducción:</label>
+                            {% elif actual == 2 %}
+                                <label for="txtTitulo">Nudo:</label>
+                            {% else %}
+                                <label for="txtTitulo">Desenlace:</label>
+                            {% endif %}
                             <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
                                 <textarea class="form-control" id="txtTexto" name="txtTexto" style="width:100%; height:400px">{{ capitulo_actual.texto }}</textarea>
                             </div>
@@ -62,23 +74,34 @@
     <div class="container">
         <div class="form-row">
             <div class="col-md-3">
-                {% if capitulo != '' %}
-                    {% if capitulo|default:0|add:-1 == 0 %}
-                        <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/"><button id="btn_cap_ant" type="button" class="btn btn-primary">Libro</button></a>
-                    {% else %}
-                        <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{ capitulo|default:0|add:-1 }}/"><button id="btn_cap_ant" type="button" class="btn btn-primary">Capítulo {{ capitulo|default:0|add:-1 }}</button></a>
-                    {% endif %}
+                {% if actual == 1 and anterior != None %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-primary" style="float: left">{{ category.get_nombre_singular }}</button></a>
+                {% endif %}
+
+                {% if actual == 2 and anterior != None %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-primary"  style="float: left">Introducción</button></a>
+                {% endif %}
+
+                {% if actual == 3 and anterior != None %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{anterior}}/"><button type="button" class="btn btn-primary"  style="float: left">Nudo</button></a>
                 {% endif %}
             </div>
             <div class="col-md-6">
                 <center>
                     <button id="btn_guardar" type="submit" class="btn btn-success">Guardar</button>
-                    <!--<button id="btn_eliminar" type="button" class="btn btn-danger">Eliminar</button>-->
                 </center>
             </div>
             <div class="col-md-3">
-                {% if book and book.id and book.id != '' %}
-                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{ capitulo|default:0|add:1 }}/"><button id="btn_cap_sig" type="button" class="btn btn-primary" style="float: right">Capítulo {{ capitulo|default:0|add:1 }}</button></a>
+                {% if actual == 0 and siguiente != None %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-primary" style="float: right">Introducción</button></a>
+                {% endif %}
+
+                {% if actual == 1 and siguiente != None %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-primary" style="float: right">Nudo</button></a>
+                {% endif %}
+
+                {% if actual == 2 and siguiente != None %}
+                    <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-primary" style="float: right">Desenlace</button></a>
                 {% endif %}
             </div>
         </div>

@@ -1,0 +1,64 @@
+{% extends 'libros/base.html' %}
+{% load static %}
+{% block 'slider' %}
+<!-- banner -->
+	<div class="banner1">
+		<div class="w3_agileits_service_banner_info">
+			<h2>Ayuda</h2>
+		</div>
+	</div>
+<!-- //banner -->
+{% endblock %}
+{% block 'body' %}
+<div class="contact">
+    <center>
+        <div class="row">
+            <a href="{% url 'home' %}"><label>Página principal</label></a>
+            <br>
+            <img src="{% static 'libros/images/inicio.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <a href="{% url 'content' %}"><label>Contenido de la materia</label></a>
+            <br>
+            <img src="{% static 'libros/images/contenido.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <a href="{% url 'categories' %}"><label>Ejercitación disponible</label></a>
+            <br>
+            <img src="{% static 'libros/images/ejercitacion.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <label>Lecturas disponibles</label>
+            <br>
+            <img src="{% static 'libros/images/listado_cuentos.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <label>Leer un cuento</label>
+            <br>
+            <img src="{% static 'libros/images/leer_libro.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <label>Crear un cuento</label>
+            <br>
+            <img src="{% static 'libros/images/crear_cuento.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <label>Editar un cuento</label>
+            <br>
+            <img src="{% static 'libros/images/editar_cuento.png' %}" width="800px" height="600px">
+        </div>
+        <br>
+        <div class="row">
+            <a href="{% url 'autoevaluacion' %}"><label>Autoevaluación</label></a>
+            <br>
+            <img src="{% static 'libros/images/autoevaluacion.png' %}" width="800px" height="600px">
+        </div>
+    </center>
+</div>
+{% endblock %}
