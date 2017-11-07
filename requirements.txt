@@ -1,0 +1,10 @@
+Django==1.11.7
+django-autoslug==1.9.3
+django-classy-tags==0.8.0
+django-extensions==1.9.7
+django-sekizai==0.10.0
+olefile==0.44
+Pillow==4.3.0
+pytz==2017.3
+six==1.11.0
+typing==3.6.2
