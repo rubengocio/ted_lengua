@@ -103,6 +103,10 @@
                 {% if actual == 2 and siguiente != None %}
                     <a href="{% url 'categories' %}{{ category.slug}}/libro/{{book.id}}/{{siguiente}}/"><button type="button" class="btn btn-primary" style="float: right">Desenlace</button></a>
                 {% endif %}
+
+                {% if actual == 3 %}
+                    <a href="{% url 'question' book.id %}"><button type="button" class="btn btn-primary" style="float: right">Autoevaluación</button></a>
+                {% endif %}
             </div>
         </div>
     </div>

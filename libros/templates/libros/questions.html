@@ -1,0 +1,84 @@
+{% extends 'libros/base.html' %}
+{% load static %}
+{% block 'slider' %}
+<!-- banner -->
+	<div class="banner1">
+		<div class="w3_agileits_service_banner_info">
+			<h2>Preguntas</h2>
+		</div>
+	</div>
+<!-- //banner -->
+{% endblock %}
+{% block 'body' %}
+    <form action="{% url 'question' book.id %}" method="post">
+        {% csrf_token %}
+        <input name="auto_id" type="hidden" value="{{ autoevaluacion.id }}">
+        <input id="preguntas" type="hidden" value="{{ preguntas }}">
+        <input id="opciones" type="hidden" value="{{ opciones }}">
+        <div class="container">
+            {% if autoevaluacion.id > 0 %}
+                <ul class="list-group">
+                    <center>
+                    {% if calificacion == 'MUY BIEN' %}
+                        <li class="list-group-item list-group-item-success">{{ calificacion }}</li>
+                    {% elif calificacion == 'BIEN' %}
+                        <li class="list-group-item list-group-item-info">{{ calificacion }}</li>
+                    {% elif calificacion == 'REGULAR' %}
+                        <li class="list-group-item list-group-item-warning">{{ calificacion }}</li>
+                    {% elif calificacion == 'NECESITA MEJORAR' %}
+                        <li class="list-group-item list-group-item-danger">{{ calificacion }}</li>
+                    {% else %}
+
+                    {% endif %}
+                    </center>
+                </ul>
+            {% endif %}
+            <div class="form-row">
+                {% for type_question in type_questions %}
+                    <label style="font-size:25px">{{ type_question.texto }}</label>
+                    <br><br>
+                    <div style="margin:20px">
+                    {% for question in type_question.get_questions %}
+                            {% if question.count_options != 0 %}
+                                <label>{{ question.texto }}</label>
+                            {% else %}
+                                    <label><input id="q_{{ question.id }}" name="q_{{ question.id }}" type="checkbox" value="{{ question.id }}">{{ question.texto }}</label>
+                            {% endif %}
+                            <div style="margin:20px">
+                                {% for option in question.get_options %}
+                                    <div class="checkbox">
+                                        <label><input id="o_{{option.id}}" name="o_{{option.id}}" type="checkbox" value="{{option.id}}">{{ option.texto }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        <br>
+                    {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <center>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <a href="{% url 'categories' %}{{ book.categoria.slug}}/libro/{{book.id}}/3/"><button type="button" class="btn btn-alert">Volver a {{book.titulo}}</button></a>
+            </center>
+        </div>
+    </form>
+{% endblock %}
+{% block 'script' %}
+    <script type="text/javascript">
+		$(document).ready(function() {
+		    var preguntas = $('#preguntas').val().split(',');
+		    for(var i=0; i < preguntas.length; i++){
+		        var pre = '#q_' + preguntas[i];
+		        $(pre).prop("checked", true);
+		    }
+
+		    var opciones = $('#opciones').val().split(',');
+		    for(var i=0; i < opciones.length; i++){
+		        var pre = '#o_' + opciones[i];
+		        $(pre).prop("checked", true);
+		    }
+		});
+	</script>
+{% endblock %}

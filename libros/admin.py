@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Categoria, Imagen, Libro, Capitulo, Comentario, Opcion, Contenido
+from .models import Categoria, Imagen, Libro, Capitulo, Comentario, Opcion, Contenido, Pregunta, TipoPregunta, \
+    Autoevaluacion
+
 
 # , Autoevaluacion, Opcion
 
@@ -18,19 +20,28 @@ class ImagenAdmin(admin.ModelAdmin):
     list_filter = ('categoria', )
 
 
-class OpcionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'texto', 'opcion', 'categoria')
-    list_filter = ('categoria', )
+class OpcionHeadInLine(admin.TabularInline):
+    model = Opcion
+    extra = 1
 
+
+class PreguntaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'texto', 'tipo_pregunta', )
+    list_filter = ('tipo_pregunta', )
+    inlines = [OpcionHeadInLine]
+
+
+class TipoPreguntaAdmin(admin.ModelAdmin):
+    list_display = ('texto', 'categoria', 'orden',)
 
 
 # Register your models here.
-
 admin.site.register(Categoria)
 admin.site.register(Imagen, ImagenAdmin)
 admin.site.register(Libro, LibroAdmin)
 admin.site.register(Capitulo, CapituloAdmin)
 admin.site.register(Comentario)
 admin.site.register(Contenido)
-admin.site.register(Opcion, OpcionAdmin)
-
+admin.site.register(Pregunta, PreguntaAdmin)
+admin.site.register(TipoPregunta, TipoPreguntaAdmin)
+admin.site.register(Autoevaluacion)

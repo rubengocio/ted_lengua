@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^contenido/$', content, name='content'),
     url(r'^autoevaluacion/$', autoevaluate, name='autoevaluacion'),
     url(r'^ayuda/$', help, name='ayuda'),
+    url(r'^preguntas/(?P<id_book>[0-9]+)/$', question, name='question'),
+    url(r'^preguntas/$', question, name='question'),
     url(r'^$', home, name='home'),
 
 

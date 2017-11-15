@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, Group
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from .models import Categoria, Imagen, Libro, Capitulo, Comentario, Contenido
+from .models import Categoria, Imagen, Libro, Capitulo, Comentario, Contenido, Pregunta, TipoPregunta, Autoevaluacion
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
@@ -307,6 +307,84 @@ def autoevaluate(request):
     }
 
     return render(request, 'libros/autoevaluate.html', context)
+
+
+def question(request, id_book):
+    book = Libro.objects.get(id=id_book)
+    category = book.categoria
+    questions = Pregunta.objects.all().order_by('tipo_pregunta__orden')
+    autoevaluacion = Autoevaluacion.objects.filter(libro=book).first()
+    type1 = TipoPregunta.objects.filter(categoria=None)
+    type2= TipoPregunta.objects.filter(categoria=category)
+    type_questions = type1.union(type2).order_by('orden')
+
+    puntaje = 0
+
+    if autoevaluacion:
+        puntaje = autoevaluacion.puntaje
+
+    puntaje_total = 0
+    for type in type_questions:
+        puntaje_total += type.get_puntaje
+
+    if request.method == 'POST':
+        preguntas = []
+        opciones = []
+        puntaje = 0
+
+        for q in questions:
+            name = 'q_' + str(q.id)
+            if request.POST.get(name, '') != '':
+                preguntas.append(str(q.id))
+                puntaje += q.puntaje
+
+            for o in q.get_options:
+                name2 = 'o_' + str(o.id)
+                if request.POST.get(name2, '') != '':
+                    opciones.append(str(o.id))
+                    puntaje += o.puntaje
+
+        auto_id = request.POST.get('auto_id', '')
+        if auto_id is None or auto_id == '' or auto_id == 'None':
+            autoevaluacion = Autoevaluacion()
+        else:
+            autoevaluacion = Autoevaluacion.objects.get(id=auto_id)
+
+        autoevaluacion.opciones = ','.join(opciones)
+        autoevaluacion.preguntas = ','.join(preguntas)
+        autoevaluacion.libro = book
+        autoevaluacion.puntaje = puntaje
+        autoevaluacion.save()
+
+    calificacion = get_calificacion(puntaje_total, puntaje)
+
+    context = {
+        'menu': 'que',
+        'questions': questions,
+        'type_questions': type_questions,
+        'book': book,
+        'autoevaluacion': autoevaluacion,
+        'preguntas': '' if autoevaluacion is None else autoevaluacion.preguntas,
+        'opciones': '' if autoevaluacion is None else autoevaluacion.opciones,
+        'calificacion': calificacion
+    }
+
+    return render(request, 'libros/questions.html', context)
+
+
+def get_calificacion(total, puntaje):
+    porc = (puntaje * 100) / total
+
+    if porc <= 25:
+        return 'NECESITA MEJORAR'
+    elif porc <= 50:
+        return 'REGULAR'
+    elif porc <= 75:
+        return 'BIEN'
+    elif porc <= 100:
+        return 'MUY BIEN'
+    else:
+        return ''
 
 
 def help(request):
