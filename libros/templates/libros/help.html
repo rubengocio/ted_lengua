@@ -14,49 +14,61 @@
     <center>
         <div class="row">
             <a href="{% url 'home' %}"><label>Página principal</label></a>
-            <br>
+            <br><br>
             <img src="{% static 'libros/images/inicio.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
             <a href="{% url 'content' %}"><label>Contenido de la materia</label></a>
+            <br><br>
+            Contenido de los temas tratados en la materia, necesarios para completar la ejercitación.
             <br>
             <img src="{% static 'libros/images/contenido.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
             <a href="{% url 'categories' %}"><label>Ejercitación disponible</label></a>
+            <br><br>
+            <div style="width:800px">
+            El usuario deberá desarrollar un texto narrativo ficcional.
+            Para esto deberá seleccionar uno de los tres tipos disponibles de textos narrativos
+            Luego de elegir el tipo de texto y seleccionar la opcion crear se presentaran un
+            conjunto de imagenes que el usuario deberá utilizar en la confección del texto.
+            Tener en cuenta que las imagenes deberán estar relacionadas con el texto descripto.
+            </div>
             <br>
             <img src="{% static 'libros/images/ejercitacion.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
             <label>Lecturas disponibles</label>
+            <br><br>
+            Listado de textos disponibles para lectura
             <br>
             <img src="{% static 'libros/images/listado_cuentos.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
             <label>Leer un cuento</label>
-            <br>
+            <br><br>
             <img src="{% static 'libros/images/leer_libro.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
             <label>Crear un cuento</label>
-            <br>
+            <br><br>
             <img src="{% static 'libros/images/crear_cuento.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
             <label>Editar un cuento</label>
-            <br>
+            <br><br>
             <img src="{% static 'libros/images/editar_cuento.png' %}" width="800px" height="600px">
         </div>
         <br>
         <div class="row">
-            <a href="{% url 'autoevaluacion' %}"><label>Autoevaluación</label></a>
-            <br>
+            <a href="{% url 'autoevaluacion' %}"><label>Rúbrica</label></a>
+            <br><br>
             <img src="{% static 'libros/images/autoevaluacion.png' %}" width="800px" height="600px">
         </div>
     </center>
